@@ -1,0 +1,30 @@
+.todo-table {
+  width: 80%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  text-align: center;
+}
+
+.todo-table th,
+.todo-table td {
+  border: 1px solid #ddd;
+  padding: 10px;
+}
+
+.todo-table th {
+  background-color: #007bff;
+  color: white;
+}
+
+.delete-button {
+  background-color: #dc3545;
+  color: white;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.delete-button:hover {
+  background-color: #c82333;
+}
