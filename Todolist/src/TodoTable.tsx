@@ -3,13 +3,18 @@ import "./TodoTable.css";
 type Todo = {
   id: string;
   description: string;
-  date: Date;
+  date: string;
 };
 
 type Props = {
   todos: Todo[];
   deleteTodo: (id: string) => void;
 };
+
+const formatDate = (dateStr: string) => {
+  const date = new Date(dateStr);
+  return date.toLocaleDateString("fi-fi");
+}
 
 function TodoTable({ todos, deleteTodo }: Props) {
   return (
@@ -27,8 +32,7 @@ function TodoTable({ todos, deleteTodo }: Props) {
         {todos.map((todo) => (
           <tr key={todo.id}>
             <td>
-              {!isNaN(todo.date.getTime()) &&
-                todo.date.toLocaleDateString("fi-FI")}
+              {formatDate(todo.date)}
             </td>
             <td>{todo.description}</td>
             <td>

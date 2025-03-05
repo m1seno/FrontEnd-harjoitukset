@@ -6,36 +6,20 @@ import './TodoList.css';
 type Todo = {
   id: string;
   description: string;
-  date: Date;
+  date: string;
 };
 
 function TodoList() {
   const [todo, setTodo] = useState<Todo>({
     id: uuidv4(),
     description: "",
-    date: new Date(),
+    date: "",
   });
   const [todos, setTodos] = useState<Todo[]>([]);
-  const [dateInput, setDateInput] = useState<string>("");
-
-  function parseDate() {
-    const dateParts = dateInput.split(".");
-    const day = parseInt(dateParts[0]);
-    const month = parseInt(dateParts[1]) - 1;
-    const year = parseInt(dateParts[2]);
-    const date = new Date(year, month, day);
-    return isNaN(date.getTime()) ? new Date(NaN) : date;
-  }
 
   const addTodo = () => {
-    const parsedDate = parseDate();
-    if (isNaN(parsedDate.getTime())) {
-      alert("Invalid date format. Please use dd.mm.yyyy");
-      return;
-    }
-    setTodos([...todos, { ...todo, date: parsedDate, id: uuidv4() }]);
-    setTodo({ id: uuidv4(), description: "", date: new Date() });
-    setDateInput("");
+    setTodos([...todos, { ...todo, id: uuidv4() }]);
+    setTodo({ id: uuidv4(), description: "", date: "" });
   };
 
   const deleteTodo = (id: string) => {
@@ -53,8 +37,9 @@ function TodoList() {
       <input
       className="todo-input"
         placeholder="Date"
-        onChange={(e) => setDateInput(e.target.value)}
-        value={dateInput}
+        type="date"
+        onChange={(e) => setTodo({...todo, date: e.target.value})}
+        value={todo.date}
       />
       <button className="todo-button" onClick={addTodo}>Add</button>
       <TodoTable todos={todos} deleteTodo={deleteTodo} />
