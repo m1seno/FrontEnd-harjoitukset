@@ -25,7 +25,7 @@ function TodoList() {
 
   const addTodo = () => {
     setTodos([...todos, { ...todo, id: uuidv4() }]);
-    setTodo({ id: uuidv4(), description: "", priority: "", date: "" });
+    setTodo({ id: uuidv4(), description: "", priority: "Low", date: "" });
   };
 
   const deleteTodo = () => {
@@ -101,7 +101,7 @@ function TodoList() {
           ref={gridRef}
           columnDefs={columnDefs}
           rowData={todos}
-          rowSelection="multiple"
+          rowSelection="single"
         />
       </div>
     </div>
