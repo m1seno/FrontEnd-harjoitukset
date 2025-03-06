@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import "./TodoList.css";
 import { AgGridReact } from "ag-grid-react";
@@ -17,18 +17,24 @@ function TodoList() {
   const [todo, setTodo] = useState<Todo>({
     id: uuidv4(),
     description: "",
-    priority: "",
+    priority: "Low",
     date: "",
   });
   const [todos, setTodos] = useState<Todo[]>([]);
+  const gridRef = useRef<AgGridReact<Todo>>(null);
 
   const addTodo = () => {
     setTodos([...todos, { ...todo, id: uuidv4() }]);
     setTodo({ id: uuidv4(), description: "", priority: "", date: "" });
   };
 
-  const deleteTodo = (id: string) => {
-    setTodos(todos.filter((todo) => todo.id !== id));
+  const deleteTodo = () => {
+    setTodos(
+      todos.filter(
+        (_todo, id) =>
+          id !== Number(gridRef.current?.api.getSelectedNodes()[0].id)
+      )
+    );
   };
 
   const [columnDefs] = useState<ColDef<Todo>[]>([
@@ -63,8 +69,7 @@ function TodoList() {
         <span style={{ marginRight: "8px" }}> Choose priority:</span>
         <select
           className="todo-input"
-          id="Priority"
-          name="valikko"
+          value={todo.priority}
           onChange={(e) => setTodo({ ...todo, priority: e.target.value })}
         >
           <option value={"Low"}>Low</option>
@@ -81,12 +86,23 @@ function TodoList() {
         value={todo.date}
       />
 
-      <button className="todo-button" onClick={addTodo}>
-        Add
-      </button>
+      <div className="button-container">
+        <button className="todo-button" onClick={addTodo}>
+          Add
+        </button>
+
+        <button className="delete-button" onClick={deleteTodo}>
+          Delete
+        </button>
+      </div>
 
       <div style={{ width: 700, height: 500 }}>
-        <AgGridReact rowData={todos} columnDefs={columnDefs}></AgGridReact>
+        <AgGridReact
+          ref={gridRef}
+          columnDefs={columnDefs}
+          rowData={todos}
+          rowSelection="multiple"
+        />
       </div>
     </div>
   );
