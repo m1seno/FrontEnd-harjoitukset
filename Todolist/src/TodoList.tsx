@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
-import "./TodoList.css";
+// import "./TodoList.css";
 import { AgGridReact } from "ag-grid-react";
 import { AllCommunityModule, ColDef, ModuleRegistry } from "ag-grid-community";
 
@@ -38,11 +38,12 @@ function TodoList() {
   };
 
   const [columnDefs] = useState<ColDef<Todo>[]>([
-    { field: "description", sortable: true, filter: true },
+    { field: "description", sortable: true, filter: true, floatingFilter: true },
     {
       field: "priority",
       sortable: true,
       filter: true,
+      floatingFilter: true,
       cellStyle: (params) =>
         params.value === "High"
           ? { color: "red" }
@@ -52,7 +53,7 @@ function TodoList() {
           ? { color: "green" }
           : { color: "black" },
     },
-    { field: "date", sortable: true, filter: true },
+    { field: "date", sortable: true, filter: true, floatingFilter: true },
   ]);
 
   return (
@@ -102,6 +103,7 @@ function TodoList() {
           columnDefs={columnDefs}
           rowData={todos}
           rowSelection="single"
+          defaultColDef={{floatingFilter: true}}
         />
       </div>
     </div>

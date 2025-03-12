@@ -1,12 +1,15 @@
 import TodoList from './TodoList';
-import './App.css'
+import Container from "@mui/material/Container"
+import CssBaseline from '@mui/material/CssBaseline';
+//import './App.css'
 
 function App() {
   return (
-    <div className='app-container'>
+    <Container maxWidth="xl">
+      <CssBaseline/>
       <h1>Todo List</h1>
       <TodoList />
-    </div>
+      </Container>
   );
 }
 
