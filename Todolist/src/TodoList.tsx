@@ -1,8 +1,22 @@
 import { useRef, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
-// import "./TodoList.css";
 import { AgGridReact } from "ag-grid-react";
 import { AllCommunityModule, ColDef, ModuleRegistry } from "ag-grid-community";
+
+import Button from "@mui/material/Button";
+import TextField from "@mui/material/TextField";
+import {
+  FormControl,
+  InputLabel,
+  MenuItem,
+  OutlinedInput,
+  Select,
+} from "@mui/material";
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import {LocalizationProvider} from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from "@mui/x-date-pickers";
+import dayjs, {Dayjs} from 'dayjs';
+
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -17,7 +31,7 @@ function TodoList() {
   const [todo, setTodo] = useState<Todo>({
     id: uuidv4(),
     description: "",
-    priority: "Low",
+    priority: "",
     date: "",
   });
   const [todos, setTodos] = useState<Todo[]>([]);
@@ -25,7 +39,7 @@ function TodoList() {
 
   const addTodo = () => {
     setTodos([...todos, { ...todo, id: uuidv4() }]);
-    setTodo({ id: uuidv4(), description: "", priority: "Low", date: "" });
+    setTodo({ id: uuidv4(), description: "", priority: "", date: "" });
   };
 
   const deleteTodo = () => {
@@ -37,8 +51,31 @@ function TodoList() {
     );
   };
 
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setTodo({ ...todo, [event.target.name]: event.target.value });
+  };
+
+  const handleDateChange = (date: Dayjs | null) => {
+    if (date) {
+      setTodo((prevTodo) => ({
+        ...prevTodo,
+        date: date.format("YYYY-MM-DD"),
+      }));
+    }
+  };
+
+  const formatDate = (dateString: string) => {
+    if (!dateString) return "";
+    return dayjs(dateString).format("DD.MM.YYYY");
+  };
+
   const [columnDefs] = useState<ColDef<Todo>[]>([
-    { field: "description", sortable: true, filter: true, floatingFilter: true },
+    {
+      field: "description",
+      sortable: true,
+      filter: true,
+      floatingFilter: true,
+    },
     {
       field: "priority",
       sortable: true,
@@ -53,57 +90,75 @@ function TodoList() {
           ? { color: "green" }
           : { color: "black" },
     },
-    { field: "date", sortable: true, filter: true, floatingFilter: true },
+    {
+      field: "date",
+      valueFormatter: ({ value }) => formatDate(value),
+      sortable: true,
+      filter: true,
+      floatingFilter: true,
+    },
   ]);
 
   return (
-    <div className="todo-container">
-      <input
-        className="todo-input"
-        placeholder="Description"
+    <div>
+      <TextField
+        name="description"
+        label="Description"
         type="text"
-        onChange={(e) => setTodo({ ...todo, description: e.target.value })}
+        onChange={handleChange}
         value={todo.description}
+        sx={{ width: "250px" }}
       />
 
-      <label>
-        <span style={{ marginRight: "8px" }}> Choose priority:</span>
-        <select
-          className="todo-input"
+      <FormControl sx={{ width: "250px" }}>
+        <InputLabel id="priority-label">Priority</InputLabel>
+        <Select
+          name="priority"
+          labelId="priority-label"
+          id="priority"
           value={todo.priority}
-          onChange={(e) => setTodo({ ...todo, priority: e.target.value })}
+          onChange={handleChange}
+          input={<OutlinedInput label="Priority" />}
         >
-          <option value={"Low"}>Low</option>
-          <option value={"Medium"}>Medium</option>
-          <option value={"High"}>High</option>
-        </select>
-      </label>
+          <MenuItem value="Low">Low</MenuItem>
+          <MenuItem value="Medium">Medium</MenuItem>
+          <MenuItem value="High">High</MenuItem>
+        </Select>
+      </FormControl>
 
-      <input
-        className="todo-input"
-        placeholder="Date"
-        type="date"
-        onChange={(e) => setTodo({ ...todo, date: e.target.value })}
-        value={todo.date}
-      />
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <DatePicker
+        label="date"
+        name="date"
+        value={todo.date ? dayjs(todo.date) : null}
+        onChange={handleDateChange}
+        format="DD.MM.YYYY"
+        sx={{width: "250px"}}
+        />
+        </LocalizationProvider>
 
-      <div className="button-container">
-        <button className="todo-button" onClick={addTodo}>
+      <div>
+        <Button
+          onClick={addTodo}
+          variant="contained"
+          color="primary"
+          style={{ marginRight: "8px" }}
+        >
           Add
-        </button>
+        </Button>
 
-        <button className="delete-button" onClick={deleteTodo}>
+        <Button onClick={deleteTodo} variant="contained" color="error">
           Delete
-        </button>
+        </Button>
       </div>
 
-      <div style={{ width: 700, height: 500 }}>
+      <div style={{ width: 750, height: 500 }}>
         <AgGridReact
           ref={gridRef}
           columnDefs={columnDefs}
           rowData={todos}
           rowSelection="single"
-          defaultColDef={{floatingFilter: true}}
+          defaultColDef={{ floatingFilter: true }}
         />
       </div>
     </div>
