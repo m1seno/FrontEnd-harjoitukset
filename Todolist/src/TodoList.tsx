@@ -1,8 +1,10 @@
 import { useRef, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
+
 import { AgGridReact } from "ag-grid-react";
 import { AllCommunityModule, ColDef, ModuleRegistry } from "ag-grid-community";
 
+import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import {
@@ -12,11 +14,12 @@ import {
   OutlinedInput,
   Select,
 } from "@mui/material";
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import {LocalizationProvider} from '@mui/x-date-pickers/LocalizationProvider';
-import { DatePicker } from "@mui/x-date-pickers";
-import dayjs, {Dayjs} from 'dayjs';
+import DeleteIcon from "@mui/icons-material/Delete";
 
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DatePicker } from "@mui/x-date-pickers";
+import dayjs, { Dayjs } from "dayjs";
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -100,59 +103,57 @@ function TodoList() {
   ]);
 
   return (
-    <div>
-      <TextField
-        name="description"
-        label="Description"
-        type="text"
-        onChange={handleChange}
-        value={todo.description}
-        sx={{ width: "250px" }}
-      />
-
-      <FormControl sx={{ width: "250px" }}>
-        <InputLabel id="priority-label">Priority</InputLabel>
-        <Select
-          name="priority"
-          labelId="priority-label"
-          id="priority"
-          value={todo.priority}
+    <>
+      <Stack mt={2} direction="row" spacing={2} alignItems="center">
+        <TextField
+          name="description"
+          label="Description"
+          type="text"
           onChange={handleChange}
-          input={<OutlinedInput label="Priority" />}
-        >
-          <MenuItem value="Low">Low</MenuItem>
-          <MenuItem value="Medium">Medium</MenuItem>
-          <MenuItem value="High">High</MenuItem>
-        </Select>
-      </FormControl>
-
-      <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <DatePicker
-        label="date"
-        name="date"
-        value={todo.date ? dayjs(todo.date) : null}
-        onChange={handleDateChange}
-        format="DD.MM.YYYY"
-        sx={{width: "250px"}}
+          value={todo.description}
         />
+
+        <FormControl sx={{ width: "250px" }}>
+          <InputLabel id="priority-label">Priority</InputLabel>
+          <Select
+            name="priority"
+            labelId="priority-label"
+            id="priority"
+            value={todo.priority}
+            onChange={handleChange}
+            input={<OutlinedInput label="Priority" />}
+          >
+            <MenuItem value="Low">Low</MenuItem>
+            <MenuItem value="Medium">Medium</MenuItem>
+            <MenuItem value="High">High</MenuItem>
+          </Select>
+        </FormControl>
+
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <DatePicker
+            label="date"
+            name="date"
+            value={todo.date ? dayjs(todo.date) : null}
+            onChange={handleDateChange}
+            format="DD.MM.YYYY"
+            sx={{ width: "250px" }}
+          />
         </LocalizationProvider>
 
-      <div>
-        <Button
-          onClick={addTodo}
-          variant="contained"
-          color="primary"
-          style={{ marginRight: "8px" }}
-        >
-          Add
-        </Button>
+          <Button
+            onClick={addTodo}
+            variant="contained"
+            color="primary"
+          >
+            Add
+          </Button>
 
-        <Button onClick={deleteTodo} variant="contained" color="error">
-          Delete
-        </Button>
-      </div>
+          <Button onClick={deleteTodo} variant="contained" color="error" startIcon={<DeleteIcon/>}>
+            Delete
+          </Button>
+      </Stack>
 
-      <div style={{ width: 750, height: 500 }}>
+      <div style={{ width: 755, height: 500 }}>
         <AgGridReact
           ref={gridRef}
           columnDefs={columnDefs}
@@ -161,7 +162,7 @@ function TodoList() {
           defaultColDef={{ floatingFilter: true }}
         />
       </div>
-    </div>
+    </>
   );
 }
 
