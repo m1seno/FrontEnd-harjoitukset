@@ -13,6 +13,7 @@ import {
   MenuItem,
   OutlinedInput,
   Select,
+  SelectChangeEvent,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 
@@ -56,6 +57,10 @@ function TodoList() {
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setTodo({ ...todo, [event.target.name]: event.target.value });
+  };
+
+  const handleSelectChange = (event: SelectChangeEvent<string>) => {
+    setTodo({...todo, priority: event.target.value});
   };
 
   const handleDateChange = (date: Dayjs | null) => {
@@ -104,7 +109,7 @@ function TodoList() {
 
   return (
     <>
-      <Stack mt={2} direction="row" spacing={2} alignItems="center">
+      <Stack mt={2} direction="row" spacing={2}justifyContent="center" alignItems="center">
         <TextField
           name="description"
           label="Description"
@@ -120,7 +125,7 @@ function TodoList() {
             labelId="priority-label"
             id="priority"
             value={todo.priority}
-            onChange={handleChange}
+            onChange={handleSelectChange}
             input={<OutlinedInput label="Priority" />}
           >
             <MenuItem value="Low">Low</MenuItem>
@@ -153,13 +158,14 @@ function TodoList() {
           </Button>
       </Stack>
 
-      <div style={{ width: 755, height: 500 }}>
+      <div style={{ width: "100%", maxWidth: "800px", height: 500, margin: "0 auto" }}>
         <AgGridReact
           ref={gridRef}
           columnDefs={columnDefs}
           rowData={todos}
           rowSelection="single"
           defaultColDef={{ floatingFilter: true }}
+          pivotSuppressAutoColumn
         />
       </div>
     </>
