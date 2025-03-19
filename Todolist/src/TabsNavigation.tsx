@@ -1,31 +1,28 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
-import Box from "@mui/material/Box";
-import TodoList from "./TodoList";
+import { useLocation, useNavigate } from "react-router-dom";
 
 function TabsNavigation() {
-  const [value, setValue] = useState(0);
+  const location = useLocation();
+  const navigate = useNavigate();
+  const [value, setValue] = useState(location.pathname);
 
-  const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
+  useEffect(() => {
+    setValue(location.pathname);
+  }, [location.pathname]);
+
+  const handleChange = (_event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
+    navigate(newValue);
   };
 
   return (
-    <Box >
-      <Tabs value={value} onChange={handleChange}>
-        <Tab label="Home" />
-        <Tab label="Todos" />
-      </Tabs>
-
-      {value === 0 && (
-        <Box>
-          <h2>Welcome to the Todo List -app</h2>
-          <p>Here you can add new Todo -items to your list and delete them</p>
-        </Box>
-      )}
-      {value === 1 && <TodoList />}
-    </Box>
+    <Tabs value={value} onChange={handleChange} aria-label="navigation tabs">
+      <Tab label="Home" value="/" />
+      <Tab label="Todos" value="/todolist" />
+      <Tab label="About" value="/about" />
+    </Tabs>
   );
 }
 

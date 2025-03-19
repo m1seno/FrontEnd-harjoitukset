@@ -7,6 +7,7 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 
 import './App.css'
+import { Outlet } from "react-router-dom";
 
 function App() {
   return (
@@ -17,10 +18,11 @@ function App() {
       <CssBaseline />
       <AppBar position="static">
         <Toolbar>
-          <Typography variant="h6">Todo List</Typography>
+          <Typography variant="h6">TodoList</Typography>
         </Toolbar>
       </AppBar>
       <TabsNavigation />
+      <Outlet/>
     </Container>
   );
 }
